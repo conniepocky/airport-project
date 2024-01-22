@@ -11,8 +11,6 @@ aircraft_types = [["medium narrow body", "£8", "2650", "180", "8"], ["large nar
 
 active = True
 
-print(data)
-
 def clear_data():
     with open("saved_data.txt", "r") as file:
         saved = file.readlines()
@@ -80,12 +78,23 @@ while active:
         name = airport_details()
 
         print(name)
-        
+
         save(name, 0)
     elif int(choice) == 2:
         flight = flight_details()
 
         save(flight[0], 1)
         save(flight[1], 2)
+    elif int(choice) == 3:
+        #todo
+        pass
+    elif int(choice) == 4:
+        clear_data()
+        print("Data cleared")
+    elif int(choice) == 5:
+        print("Goodbye!")
+        active = False
+    else:
+        print("Error, invalid input")
 
     print("\n")
