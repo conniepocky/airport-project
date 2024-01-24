@@ -43,7 +43,7 @@ def airport_details():
 
     for i in data:
         if i[0] == overseas_code:
-            return i[1]
+            return code, i[1]
 
     return "Error, overseas airport code invalid"
 
@@ -61,13 +61,50 @@ def flight_details():
                     return "Error, too few seats compared to minimum amount"
 
                 elif first_class > int(val[3])/2:
-
-                    return "Error, first class seats greater than minimum of standard-class seats"
+                    return "Error, first class seats greater than half of standard-class seats"
 
             info[-1] = str(first_class)
             standard_class_seats = int(val[3]) - first_class * 2
 
             return " ".join(info), standard_class_seats
+        
+    return "Error, aircraft type not found"
+
+def price_plan():
+    with open("saved_data.txt", "r") as file:
+        saved = file.readlines()
+
+    print(saved)
+
+    print(len(saved))
+
+    if len(saved) == 4:
+        print("Error, not enough data to calculate profit")
+        return
+    
+    aircraft_info = saved[1].split(" ")
+
+    print(data)
+
+    dist = 0
+
+    if saved[0] == "BOH":
+        for airport in data:
+            if airport[1] == saved[1]:
+                dist = airport[3]
+                break
+    else:
+        for airport in data:
+            if airport[1] == saved[1]:
+                dist = airport[2]
+                break
+
+    if int(aircraft_info[1]) >= dist:
+        print("Error, aircraft range too short")
+        return
+
+    print(data)
+
 
 while active:
     print("1. Enter airport details\n2. Enter flight details\n3. Enter price plan and calculate profit\n4. Clear Data\n5. Quit")
@@ -79,15 +116,22 @@ while active:
 
         print(name)
 
-        save(name, 0)
+        if "Error" not in name:
+            save(name[0], 0)
+            save(name[1], 1)
+
     elif int(choice) == 2:
         flight = flight_details()
 
-        save(flight[0], 1)
-        save(flight[1], 2)
+        if "Error" not in flight:
+            save(flight[0], 2)
+            save(flight[1], 3)
+        else:
+            print(flight)
+        
     elif int(choice) == 3:
         #todo
-        pass
+        price_plan()
     elif int(choice) == 4:
         clear_data()
         print("Data cleared")
