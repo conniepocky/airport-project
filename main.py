@@ -108,7 +108,7 @@ def price_plan():
     standard_class_seats = int(saved[3])
     first_class_seats = int(aircraft_info[3])
 
-    flight_cost_per_seat = int(aircraft_info[0]) * dist / 100
+    flight_cost_per_seat = int(aircraft_info[0].replace("£", "")) * dist / 100
     flight_cost = flight_cost_per_seat * (first_class_seats + standard_class_seats)
     flight_income = (first_class_seats * first_class_seat_price) + (standard_class_seats * standard_class_seat_price)
     flight_profit = flight_income - flight_cost
@@ -148,10 +148,8 @@ while active:
         prices = price_plan()
 
         if "Error" not in prices:
-            save(prices[0], 4)
-            save(prices[1], 5)
-            save(prices[2], 6)
-            save(prices[3], 7)
+            save(prices[2], 4)
+            save(prices[3], 5)
         else:
             print(prices)
     elif int(choice) == 4:
