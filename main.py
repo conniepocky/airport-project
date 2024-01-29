@@ -78,32 +78,47 @@ def price_plan():
 
     print(len(saved))
 
-    if len(saved) == 4:
-        print("Error, not enough data to calculate profit")
-        return
+    if len(saved) < 3:
+        return "Error, not enough data to calculate profit"
     
-    aircraft_info = saved[1].split(" ")
-
-    print(data)
+    aircraft_info = saved[2].split(" ")
 
     dist = 0
 
-    if saved[0] == "BOH":
+    if "BOH" in saved[0]:
         for airport in data:
-            if airport[1] == saved[1]:
-                dist = airport[3]
+            print(airport)
+            if airport[1] == saved[1].strip():
+                dist = int(airport[3])
                 break
     else:
         for airport in data:
-            if airport[1] == saved[1]:
-                dist = airport[2]
+            if airport[1] == saved[1].strip():
+                dist = int(airport[2])
                 break
 
-    if int(aircraft_info[1]) >= dist:
-        print("Error, aircraft range too short")
-        return
+    print(dist)
 
-    print(data)
+    if int(aircraft_info[1]) >= dist:
+        return "Error, aircraft range too short"
+    
+    first_class_seat_price = int(input("Enter price of first class seat"))
+    standard_class_seat_price = int(input("Enter price of standard class seat"))
+
+    standard_class_seats = int(saved[3])
+    first_class_seats = int(aircraft_info[3])
+
+    flight_cost_per_seat = int(aircraft_info[0]) * dist / 100
+    flight_cost = flight_cost_per_seat * (first_class_seats + standard_class_seats)
+    flight_income = (first_class_seats * first_class_seat_price) + (standard_class_seats * standard_class_seat_price)
+    flight_profit = flight_income - flight_cost
+
+    print("Flight cost per seat: £" + str(flight_cost_per_seat))
+    print("Flight cost: £" + str(flight_cost))
+    print("Flight income: £" + str(flight_income))
+    print("Flight profit: £" + str(flight_profit))
+
+    return [flight_cost_per_seat, flight_cost, flight_income, flight_profit]
 
 
 while active:
@@ -130,8 +145,15 @@ while active:
             print(flight)
         
     elif int(choice) == 3:
-        #todo
-        price_plan()
+        prices = price_plan()
+
+        if "Error" not in prices:
+            save(prices[0], 4)
+            save(prices[1], 5)
+            save(prices[2], 6)
+            save(prices[3], 7)
+        else:
+            print(prices)
     elif int(choice) == 4:
         clear_data()
         print("Data cleared")
